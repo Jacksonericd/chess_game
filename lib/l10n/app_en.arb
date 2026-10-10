@@ -1,0 +1,23 @@
+{
+  "@@locale": "en",
+  "appTitle": "Chess",
+  "brandName": "CHESS",
+  "brandTagline": "CLASSIC BOARD",
+  "opponent": "Opponent",
+  "computer": "Computer",
+  "you": "You",
+  "black": "BLACK",
+  "white": "WHITE",
+  "yourTurn": "YOUR TURN",
+  "gameOver": "Game over",
+  "movesCount": "{count} MOVES",
+  "@movesCount": { "placeholders": { "count": { "type": "int" } } },
+  "undo": "Undo",
+  "whiteToMove": "White to move",
+  "blackToMove": "Black to move",
+  "computerThinking": "Computer is thinking..."
+  ,"check": "CHECK"
+  ,"checkmateWhiteWins": "CHECKMATE — YOU WIN"
+  ,"checkmateBlackWins": "CHECKMATE — COMPUTER WINS"
+  ,"stalemate": "STALEMATE — DRAW"
+}
