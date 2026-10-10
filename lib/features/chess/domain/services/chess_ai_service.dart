@@ -2,6 +2,8 @@ import '../entities/chess_move.dart';
 import '../entities/chess_piece.dart';
 import '../repositories/chess_repository.dart';
 
+enum AiDifficulty { beginner, easy, medium, hard, expert }
+
 class ChessAiService {
   const ChessAiService(this._repository);
 
@@ -10,6 +12,7 @@ class ChessAiService {
   ChessMove? chooseMove(
     List<ChessPiece?> board,
     PieceColor color, {
+    AiDifficulty difficulty = AiDifficulty.medium,
     bool canCastleKingside = false,
     bool canCastleQueenside = false,
     int? enPassantTarget,
@@ -54,8 +57,120 @@ class ChessAiService {
       }
     }
     if (candidates.isEmpty) return null;
+    if (difficulty == AiDifficulty.beginner) {
+      return candidates[candidates.length ~/ 2];
+    }
     candidates.sort((a, b) => _score(b).compareTo(_score(a)));
-    return candidates.first;
+    if (difficulty == AiDifficulty.easy || difficulty == AiDifficulty.medium) {
+      return candidates.first;
+    }
+    return _minimaxMove(
+      board,
+      color,
+      candidates,
+      difficulty == AiDifficulty.expert ? 4 : 3,
+    );
+  }
+
+  ChessMove _minimaxMove(
+    List<ChessPiece?> board,
+    PieceColor color,
+    List<ChessMove> moves,
+    int depth,
+  ) {
+    var bestMove = moves.first;
+    var bestScore = -100000;
+    for (final move in moves) {
+      final score = _search(
+        _repository.applyMove(board, move),
+        color == PieceColor.white ? PieceColor.black : PieceColor.white,
+        color,
+        depth - 1,
+        -100000,
+        100000,
+      );
+      if (score > bestScore) {
+        bestScore = score;
+        bestMove = move;
+      }
+    }
+    return bestMove;
+  }
+
+  int _search(
+    List<ChessPiece?> board,
+    PieceColor turn,
+    PieceColor maximizingColor,
+    int depth,
+    int alpha,
+    int beta,
+  ) {
+    if (depth == 0) return _evaluate(board, maximizingColor);
+    final moves = <ChessMove>[];
+    for (var from = 0; from < board.length; from++) {
+      final piece = board[from];
+      if (piece?.color != turn) continue;
+      for (final to in _repository.legalMoves(board, from, turn)) {
+        moves.add(
+          ChessMove(from: from, to: to, piece: piece!, captured: board[to]),
+        );
+      }
+    }
+    if (moves.isEmpty) {
+      return _repository.isInCheck(board, turn)
+          ? (turn == maximizingColor ? -10000 : 10000)
+          : 0;
+    }
+    final maximizing = turn == maximizingColor;
+    var best = maximizing ? -100000 : 100000;
+    for (final move in moves) {
+      final score = _search(
+        _repository.applyMove(board, move),
+        turn == PieceColor.white ? PieceColor.black : PieceColor.white,
+        maximizingColor,
+        depth - 1,
+        alpha,
+        beta,
+      );
+      if (maximizing) {
+        best = _max(best, score);
+        alpha = _max(alpha, best);
+      } else {
+        best = _min(best, score);
+        beta = _min(beta, best);
+      }
+      if (beta <= alpha) break;
+    }
+    return best;
+  }
+
+  int _max(int first, int second) => first > second ? first : second;
+  int _min(int first, int second) => first < second ? first : second;
+
+  int _evaluate(List<ChessPiece?> board, PieceColor color) {
+    const values = {
+      PieceType.pawn: 100,
+      PieceType.knight: 320,
+      PieceType.bishop: 330,
+      PieceType.rook: 500,
+      PieceType.queen: 900,
+      PieceType.king: 20000,
+    };
+    var score = board.fold(0, (total, piece) {
+      if (piece == null) return total;
+      final value = values[piece.type]!;
+      return total + (piece.color == color ? value : -value);
+    });
+    for (var index = 0; index < board.length; index++) {
+      final piece = board[index];
+      if (piece == null) continue;
+      final row = index ~/ 8;
+      final column = index % 8;
+      if (row >= 2 && row <= 5 && column >= 2 && column <= 5) {
+        score += piece.color == color ? 8 : -8;
+      }
+    }
+    return score;
   }
 
   int _score(ChessMove move) {

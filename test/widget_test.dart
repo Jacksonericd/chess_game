@@ -5,6 +5,7 @@ void main() {
   testWidgets('renders the chess board', (tester) async {
     await tester.pumpWidget(const ChessApp());
     expect(find.text('CHESS'), findsOneWidget);
-    expect(find.text('White to move'), findsOneWidget);
+    expect(find.text('Choose your opponent\'s difficulty'), findsOneWidget);
+    expect(find.text('START GAME'), findsOneWidget);
   });
 }

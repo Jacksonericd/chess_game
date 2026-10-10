@@ -15,9 +15,21 @@
   "undo": "Undo",
   "whiteToMove": "White to move",
   "blackToMove": "Black to move",
-  "computerThinking": "Computer is thinking..."
-  ,"check": "CHECK"
-  ,"checkmateWhiteWins": "CHECKMATE — YOU WIN"
-  ,"checkmateBlackWins": "CHECKMATE — COMPUTER WINS"
-  ,"stalemate": "STALEMATE — DRAW"
+  "computerThinking": "Computer is thinking...",
+  "chooseDifficulty": "Choose your opponent's difficulty",
+  "startGame": "START GAME",
+  "levelOne": "Level 1 · Beginner",
+  "levelOneDescription": "Casual moves with minimal strategy",
+  "levelTwo": "Level 2 · Easy",
+  "levelTwoDescription": "Looks for simple captures",
+  "levelThree": "Level 3 · Medium",
+  "levelThreeDescription": "Captures pieces and controls the center",
+  "levelFour": "Level 4 · Hard",
+  "levelFourDescription": "Thinks ahead with a deeper search",
+  "levelFive": "Level 5 · Expert",
+  "levelFiveDescription": "Strongest available computer play",
+  "check": "CHECK",
+  "checkmateWhiteWins": "CHECKMATE — YOU WIN",
+  "checkmateBlackWins": "CHECKMATE — COMPUTER WINS",
+  "stalemate": "STALEMATE — DRAW"
 }

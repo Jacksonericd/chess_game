@@ -15,7 +15,8 @@ abstract final class AppColors {
   static const whitePlayer = Color(0xFFF4E7D2);
   static const blackPlayer = Color(0xFF252B35);
   static const selectedSquare = Color(0xFFC79A57);
-  static const lastMoveSquare = Color(0x88D4A574);
+  static const lastMoveLightSquare = Color(0xFFD8BA82);
+  static const lastMoveDarkSquare = Color(0xFFB17A4D);
   static const availableSquare = Color(0x663A3029);
   static const availableBorder = Color(0x995B4433);
   static const success = Color(0xFF61D9AE);

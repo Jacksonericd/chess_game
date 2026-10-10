@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/theme/app_colors.dart';
 import 'l10n/app_localizations.dart';
-import 'features/chess/presentation/screens/chess_screen.dart';
+import 'features/chess/presentation/screens/game_setup_screen.dart';
 
 void main() => runApp(const ChessApp());
 
@@ -29,6 +29,6 @@ class ChessApp extends StatelessWidget {
       ),
       useMaterial3: true,
     ),
-    home: const ChessScreen(),
+    home: const GameSetupScreen(),
   );
 }
