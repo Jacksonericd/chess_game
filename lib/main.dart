@@ -1,13 +1,60 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+import 'core/services/app_open_ad_manager.dart';
 import 'core/theme/app_colors.dart';
 import 'l10n/app_localizations.dart';
 import 'features/chess/presentation/screens/game_setup_screen.dart';
+import 'firebase_options.dart';
 
-void main() => runApp(const ChessApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class ChessApp extends StatelessWidget {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await MobileAds.instance.initialize();
+
+  runApp(const ChessApp());
+}
+
+class ChessApp extends StatefulWidget {
   const ChessApp({super.key});
+
+  @override
+  State<ChessApp> createState() => _ChessAppState();
+}
+
+class _ChessAppState extends State<ChessApp> {
+  late final AppOpenAdManager _appOpenAdManager;
+  StreamSubscription<AppState>? _appStateSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _appOpenAdManager = AppOpenAdManager();
+    _appStateSubscription = AppStateEventNotifier.appStateStream.listen((
+      state,
+    ) {
+      if (state == AppState.foreground) {
+        _appOpenAdManager.showAdIfAvailable();
+      }
+    });
+    AppStateEventNotifier.startListening();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _appOpenAdManager.loadAd(showWhenLoaded: true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _appStateSubscription?.cancel();
+    AppStateEventNotifier.stopListening();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => MaterialApp(
