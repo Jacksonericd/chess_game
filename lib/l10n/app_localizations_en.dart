@@ -56,6 +56,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get computerThinking => 'Computer is thinking...';
 
   @override
+  String get chooseDifficulty => 'Choose your opponent\'s difficulty';
+
+  @override
+  String get startGame => 'START GAME';
+
+  @override
+  String get levelOne => 'Level 1 · Beginner';
+
+  @override
+  String get levelOneDescription => 'Casual moves with minimal strategy';
+
+  @override
+  String get levelTwo => 'Level 2 · Easy';
+
+  @override
+  String get levelTwoDescription => 'Looks for simple captures';
+
+  @override
+  String get levelThree => 'Level 3 · Medium';
+
+  @override
+  String get levelThreeDescription => 'Captures pieces and controls the center';
+
+  @override
+  String get levelFour => 'Level 4 · Hard';
+
+  @override
+  String get levelFourDescription => 'Thinks ahead with a deeper search';
+
+  @override
+  String get levelFive => 'Level 5 · Expert';
+
+  @override
+  String get levelFiveDescription => 'Strongest available computer play';
+
+  @override
   String get check => 'CHECK';
 
   @override

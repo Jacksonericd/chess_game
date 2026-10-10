@@ -129,11 +129,18 @@ void main() {
 
   test('computer only chooses legal moves', () {
     final board = repository.initialBoard();
-    final move = ChessAiService(repository).chooseMove(board, PieceColor.black);
-    expect(move, isNotNull);
-    expect(
-      repository.legalMoves(board, move!.from, PieceColor.black),
-      contains(move.to),
-    );
+    final ai = ChessAiService(repository);
+    for (final difficulty in AiDifficulty.values) {
+      final move = ai.chooseMove(
+        board,
+        PieceColor.black,
+        difficulty: difficulty,
+      );
+      expect(move, isNotNull);
+      expect(
+        repository.legalMoves(board, move!.from, PieceColor.black),
+        contains(move.to),
+      );
+    }
   });
 }

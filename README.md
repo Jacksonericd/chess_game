@@ -37,6 +37,7 @@ The domain depends on abstractions, while the presentation depends on the contro
 ## Features
 
 - Single-player chess board with a system opponent
+- Five selectable computer difficulty levels
 - Legal movement for all piece types
 - Captures and automatic pawn promotion to queen
 - Check, checkmate, and stalemate detection
@@ -52,4 +53,4 @@ flutter analyze
 flutter test
 ```
 
-The current system opponent uses a lightweight legal-move strategy that prioritizes captures, promotion, and central control. Full move legality includes king safety, castling rights, and en passant state.
+The system opponent has five levels: beginner, easy, medium, hard, and expert. Higher levels use deeper board evaluation. Full move legality includes king safety, castling rights, and en passant state.

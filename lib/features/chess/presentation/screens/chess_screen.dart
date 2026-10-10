@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/chess_piece.dart';
+import '../../domain/services/chess_ai_service.dart';
 import '../controllers/chess_controller.dart';
 
 class ChessScreen extends StatefulWidget {
-  const ChessScreen({super.key});
+  const ChessScreen({super.key, this.difficulty = AiDifficulty.medium});
+
+  final AiDifficulty difficulty;
 
   @override
   State<ChessScreen> createState() => _ChessScreenState();
@@ -18,7 +21,8 @@ class _ChessScreenState extends State<ChessScreen> {
   @override
   void initState() {
     super.initState();
-    controller = ChessController()..addListener(_refresh);
+    controller = ChessController(difficulty: widget.difficulty)
+      ..addListener(_refresh);
   }
 
   void _refresh() => setState(() {});
@@ -213,7 +217,9 @@ class _ChessScreenState extends State<ChessScreen> {
             color: selected
                 ? AppColors.selectedSquare
                 : isLastMove
-                ? AppColors.lastMoveSquare
+                ? dark
+                      ? AppColors.lastMoveDarkSquare
+                      : AppColors.lastMoveLightSquare
                 : dark
                 ? AppColors.blackSquare
                 : AppColors.whiteSquare,

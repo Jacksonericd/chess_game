@@ -184,6 +184,78 @@ abstract class AppLocalizations {
   /// **'Computer is thinking...'**
   String get computerThinking;
 
+  /// No description provided for @chooseDifficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your opponent\'s difficulty'**
+  String get chooseDifficulty;
+
+  /// No description provided for @startGame.
+  ///
+  /// In en, this message translates to:
+  /// **'START GAME'**
+  String get startGame;
+
+  /// No description provided for @levelOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Level 1 · Beginner'**
+  String get levelOne;
+
+  /// No description provided for @levelOneDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Casual moves with minimal strategy'**
+  String get levelOneDescription;
+
+  /// No description provided for @levelTwo.
+  ///
+  /// In en, this message translates to:
+  /// **'Level 2 · Easy'**
+  String get levelTwo;
+
+  /// No description provided for @levelTwoDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Looks for simple captures'**
+  String get levelTwoDescription;
+
+  /// No description provided for @levelThree.
+  ///
+  /// In en, this message translates to:
+  /// **'Level 3 · Medium'**
+  String get levelThree;
+
+  /// No description provided for @levelThreeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Captures pieces and controls the center'**
+  String get levelThreeDescription;
+
+  /// No description provided for @levelFour.
+  ///
+  /// In en, this message translates to:
+  /// **'Level 4 · Hard'**
+  String get levelFour;
+
+  /// No description provided for @levelFourDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Thinks ahead with a deeper search'**
+  String get levelFourDescription;
+
+  /// No description provided for @levelFive.
+  ///
+  /// In en, this message translates to:
+  /// **'Level 5 · Expert'**
+  String get levelFive;
+
+  /// No description provided for @levelFiveDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Strongest available computer play'**
+  String get levelFiveDescription;
+
   /// No description provided for @check.
   ///
   /// In en, this message translates to:

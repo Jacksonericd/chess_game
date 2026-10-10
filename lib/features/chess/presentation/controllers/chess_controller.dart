@@ -8,13 +8,16 @@ import '../../domain/services/chess_ai_service.dart';
 enum GameStatus { playing, check, checkmate, stalemate }
 
 class ChessController extends ChangeNotifier {
-  ChessController({ChessRepository? repository})
-    : _repository = repository ?? InMemoryChessRepository(),
-      _ai = ChessAiService(repository ?? InMemoryChessRepository()) {
+  ChessController({
+    ChessRepository? repository,
+    this.difficulty = AiDifficulty.medium,
+  }) : _repository = repository ?? InMemoryChessRepository(),
+       _ai = ChessAiService(repository ?? InMemoryChessRepository()) {
     reset();
   }
   final ChessRepository _repository;
   final ChessAiService _ai;
+  final AiDifficulty difficulty;
   late List<ChessPiece?> board;
   PieceColor turn = PieceColor.white;
   int? selected;
@@ -130,6 +133,7 @@ class ChessController extends ChangeNotifier {
     final move = _ai.chooseMove(
       board,
       PieceColor.black,
+      difficulty: difficulty,
       canCastleKingside: !blackKingMoved && !blackRookHMoved,
       canCastleQueenside: !blackKingMoved && !blackRookAMoved,
       enPassantTarget: enPassantTarget,
