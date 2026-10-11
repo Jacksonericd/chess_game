@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/presentation/widgets/banner_ad_widget.dart';
+import '../../../../core/theme/app_dimensions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/services/chess_ai_service.dart';
 import 'chess_screen.dart';
@@ -27,189 +27,252 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
       (AiDifficulty.expert, l10n.levelFive, l10n.levelFiveDescription),
     ];
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 520),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: AppColors.accent,
-                          borderRadius: BorderRadius.circular(15),
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment(0, -.45),
+            radius: 1.2,
+            colors: [
+              AppColors.backgroundTeal,
+              AppColors.backgroundMiddle,
+              AppColors.backgroundDeep,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final compact =
+                  constraints.maxHeight < AppDimensions.setupCompactHeight;
+              return SingleChildScrollView(
+                padding: AppDimensions.setupPagePadding(compact),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxWidth: AppDimensions.setupMaxWidth,
+                    ),
+                    child: Column(
+                      children: [
+                        _hero(l10n, compact: compact),
+                        SizedBox(
+                          height: compact
+                              ? AppDimensions.setupCompactTitleSpacing
+                              : AppDimensions.setupTitleSpacing,
                         ),
-                        child: const Icon(
-                          Icons.auto_awesome,
-                          color: AppColors.blackPiece,
+                        Text(
+                          l10n.chooseDifficulty,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: AppDimensions.setupTitleSize,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 14),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.brandName,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 3,
+                        SizedBox(
+                          height: compact
+                              ? AppDimensions.setupCompactOptionsSpacing
+                              : AppDimensions.setupOptionsSpacing,
+                        ),
+                        for (var index = 0; index < options.length; index++)
+                          _difficultyCard(options[index].$1, options[index].$2),
+                        SizedBox(
+                          height: compact
+                              ? AppDimensions.setupCompactActionSpacing
+                              : AppDimensions.setupActionSpacing,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: FilledButton.icon(
+                            onPressed: () =>
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        ChessScreen(difficulty: selected),
+                                  ),
+                                ),
+                            icon: const Icon(
+                              Icons.play_arrow_rounded,
+                              size: 27,
+                            ),
+                            label: Text(l10n.startGame.toUpperCase()),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: AppColors.goldAction,
+                              foregroundColor: AppColors.textOnGold,
+                              padding: EdgeInsets.symmetric(
+                                vertical: AppDimensions.setupButtonPaddingFor(
+                                  compact,
+                                ),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(32),
+                                side: const BorderSide(
+                                  color: AppColors.goldHighlight,
+                                ),
+                              ),
+                              textStyle: const TextStyle(
+                                fontSize: AppDimensions.setupButtonTextSize,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 1.4,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 3),
-                          Text(
-                            l10n.brandTagline,
-                            style: const TextStyle(
-                              color: AppColors.textSubtle,
-                              fontSize: 10,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 42),
-                  Text(
-                    l10n.chooseDifficulty,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800,
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '${l10n.computer}  ·  ${l10n.black}',
-                    style: const TextStyle(
-                      color: AppColors.textSubtle,
-                      fontSize: 14,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  for (var index = 0; index < options.length; index++)
-                    _difficultyCard(
-                      options[index].$1,
-                      options[index].$2,
-                      options[index].$3,
-                      index + 1,
-                    ),
-                  const SizedBox(height: 14),
-                  FilledButton.icon(
-                    onPressed: () => Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (_) => ChessScreen(difficulty: selected),
-                      ),
-                    ),
-                    icon: const Icon(Icons.play_arrow_rounded),
-                    label: Text(l10n.startGame),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppColors.accent,
-                      foregroundColor: AppColors.blackPiece,
-                      padding: const EdgeInsets.symmetric(vertical: 17),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  const Center(child: BannerAdWidget()),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _difficultyCard(
-    AiDifficulty difficulty,
-    String title,
-    String description,
-    int level,
-  ) {
+  Widget _hero(AppLocalizations l10n, {bool compact = false}) => Column(
+    children: [
+      Container(
+        width: AppDimensions.setupHeroSizeFor(compact),
+        height: AppDimensions.setupHeroSizeFor(compact),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppColors.panelHighlight,
+          border: Border.all(
+            color: AppColors.goldBorder,
+            width: AppDimensions.setupHeroBorderWidth,
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.cyanGlow,
+              blurRadius: AppDimensions.setupHeroGlowBlur,
+              spreadRadius: AppDimensions.setupHeroGlowSpread,
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            '♞',
+            style: TextStyle(
+              color: AppColors.gold,
+              fontSize: AppDimensions.setupHeroPieceSizeFor(compact),
+              height: AppDimensions.setupHeroTextHeight,
+              shadows: [
+                Shadow(
+                  color: AppColors.goldShadow,
+                  offset: AppDimensions.setupHeroShadowOffset,
+                  blurRadius: AppDimensions.setupHeroShadowBlur,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      SizedBox(height: compact ? 10 : 16),
+      Row(
+        children: [
+          const Expanded(child: Divider(color: AppColors.dividerGold)),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppDimensions.setupBrandHorizontalPadding,
+              ),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '${l10n.brandName} APP',
+                  maxLines: 1,
+                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                    color: AppColors.goldLight,
+                    fontSize: AppDimensions.setupBrandSizeFor(compact),
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 2,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const Expanded(child: Divider(color: AppColors.dividerGold)),
+        ],
+      ),
+      SizedBox(height: compact ? 3 : 6),
+      Text(
+        l10n.brandTagline.toUpperCase(),
+        style: TextStyle(
+          color: AppColors.textSecondary,
+          fontSize: AppDimensions.setupTaglineSize,
+          letterSpacing: 3,
+        ),
+      ),
+    ],
+  );
+
+  Widget _difficultyCard(AiDifficulty difficulty, String title) {
     final isSelected = selected == difficulty;
     return GestureDetector(
       onTap: () => setState(() => selected = difficulty),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 160),
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
+        margin: const EdgeInsets.only(
+          bottom: AppDimensions.setupCardBottomMargin,
+        ),
+        padding: AppDimensions.setupCardPadding,
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.successBackground : AppColors.surface,
+          color: isSelected ? AppColors.panelHighlight : AppColors.panel,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? AppColors.accent : AppColors.border,
-            width: isSelected ? 1.5 : 1,
+            color: isSelected ? AppColors.cyan : AppColors.blueBorder,
+            width: isSelected
+                ? AppDimensions.setupSelectedCardBorderWidth
+                : AppDimensions.setupCardBorderWidth,
           ),
         ),
         child: Row(
           children: [
             Container(
-              width: 34,
-              height: 34,
+              width: AppDimensions.setupIndicatorSize,
+              height: AppDimensions.setupIndicatorSize,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.accent : AppColors.background,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                '$level',
-                style: TextStyle(
-                  color: isSelected
-                      ? AppColors.blackPiece
-                      : AppColors.textMuted,
-                  fontWeight: FontWeight.w800,
+                color: Colors.transparent,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected ? AppColors.cyanBright : AppColors.blueGray,
+                  width: isSelected
+                      ? AppDimensions.setupSelectedIndicatorBorderWidth
+                      : AppDimensions.setupIndicatorBorderWidth,
                 ),
               ),
             ),
-            const SizedBox(width: 13),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    description,
-                    style: const TextStyle(
-                      color: AppColors.textMuted,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
+            const SizedBox(width: AppDimensions.setupIndicatorGap),
+            Text(
+              _pieceSymbol(difficulty),
+              style: TextStyle(
+                color: isSelected ? AppColors.cyanLight : AppColors.textBright,
+                fontSize: AppDimensions.setupPieceSize,
               ),
             ),
-            const SizedBox(width: 12),
-            Column(
-              children: [
-                for (var index = 0; index < 5; index++)
-                  Container(
-                    width: 4,
-                    height: 4,
-                    margin: const EdgeInsets.only(bottom: 3),
-                    decoration: BoxDecoration(
-                      color: index < level
-                          ? AppColors.accent
-                          : AppColors.border,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-              ],
+            const SizedBox(width: AppDimensions.setupPieceGap),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: AppColors.textBright,
+                  fontSize: AppDimensions.setupCardTextSize,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
           ],
         ),
       ),
     );
   }
+
+  String _pieceSymbol(AiDifficulty difficulty) => switch (difficulty) {
+    AiDifficulty.beginner => '♟',
+    AiDifficulty.easy => '♟',
+    AiDifficulty.medium => '♞',
+    AiDifficulty.hard => '♜',
+    AiDifficulty.expert => '♛',
+  };
 }

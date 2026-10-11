@@ -53,4 +53,8 @@ flutter analyze
 flutter test
 ```
 
+## Privacy
+
+The privacy policy is available in [chess_app_privacy_policy.md](chess_app_privacy_policy.md) and as a hostable web page at [`web/chess_app_privacy_policy.html`](web/chess_app_privacy_policy.html). Replace the support-email placeholder before publishing.
+
 The system opponent has five levels: beginner, easy, medium, hard, and expert. Higher levels use deeper board evaluation. Full move legality includes king safety, castling rights, and en passant state.
