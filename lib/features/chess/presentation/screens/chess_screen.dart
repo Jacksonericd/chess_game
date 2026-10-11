@@ -17,6 +17,7 @@ class ChessScreen extends StatefulWidget {
 
 class _ChessScreenState extends State<ChessScreen> {
   late final ChessController controller;
+  bool _checkmateDialogShown = false;
 
   @override
   void initState() {
@@ -25,7 +26,53 @@ class _ChessScreenState extends State<ChessScreen> {
       ..addListener(_refresh);
   }
 
-  void _refresh() => setState(() {});
+  void _refresh() {
+    if (!mounted) return;
+    if (controller.status != GameStatus.checkmate) {
+      _checkmateDialogShown = false;
+    }
+    setState(() {});
+    if (controller.status == GameStatus.checkmate && !_checkmateDialogShown) {
+      _checkmateDialogShown = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || controller.status != GameStatus.checkmate) {
+          _checkmateDialogShown = false;
+          return;
+        }
+        _showCheckmateDialog();
+      });
+    }
+  }
+
+  Future<void> _showCheckmateDialog() async {
+    final l10n = AppLocalizations.of(context);
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(Icons.emoji_events_outlined),
+            const SizedBox(width: 10),
+            Text(l10n.gameOver),
+          ],
+        ),
+        content: Text(
+          _statusText(l10n),
+          style: const TextStyle(fontWeight: FontWeight.w700),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              controller.reset();
+              Navigator.of(context).pop();
+            },
+            child: Text(l10n.startGame),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   void dispose() {
