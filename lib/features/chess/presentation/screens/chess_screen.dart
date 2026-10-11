@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_dimensions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/chess_piece.dart';
 import '../../domain/services/chess_ai_service.dart';
@@ -49,30 +50,143 @@ class _ChessScreenState extends State<ChessScreen> {
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            const Icon(Icons.emoji_events_outlined),
-            const SizedBox(width: 10),
-            Text(l10n.gameOver),
-          ],
+      barrierColor: AppColors.scrim,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.dialogHorizontalInset,
+          vertical: AppDimensions.dialogVerticalInset,
         ),
-        content: Text(
-          _statusText(l10n),
-          style: const TextStyle(fontWeight: FontWeight.w700),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              controller.reset();
-              Navigator.of(context).pop();
-            },
-            child: Text(l10n.startGame),
+        child: SingleChildScrollView(
+          child: Container(
+            constraints: const BoxConstraints(
+              maxWidth: AppDimensions.dialogMaxWidth,
+            ),
+            padding: AppDimensions.dialogContentPadding,
+            decoration: BoxDecoration(
+              color: AppColors.panelDark,
+              borderRadius: BorderRadius.circular(
+                AppDimensions.dialogCardRadius,
+              ),
+              border: Border.all(
+                color: AppColors.goldOutline,
+                width: AppDimensions.dialogBorderWidth,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.goldGlow.withValues(alpha: .22),
+                  blurRadius: AppDimensions.dialogShadowBlur,
+                  spreadRadius: AppDimensions.dialogShadowSpread,
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.workspace_premium,
+                  size: 72,
+                  color: AppColors.gold,
+                ),
+                const SizedBox(height: AppDimensions.dialogTitleSpacing),
+                Text(
+                  'CHECKMATE',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                    color: AppColors.gold,
+                    fontSize: AppDimensions.dialogTitleSize,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 2.5,
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.dialogTitleSpacing),
+                Text(
+                  _winnerText(l10n),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: AppDimensions.dialogWinnerSize,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.dialogWinnerSpacing),
+                Row(
+                  children: [
+                    const Expanded(child: Divider(color: AppColors.divider)),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppDimensions.dialogDividerPadding,
+                      ),
+                      child: Icon(
+                        Icons.diamond,
+                        size: 14,
+                        color: AppColors.goldAction,
+                      ),
+                    ),
+                    const Expanded(child: Divider(color: AppColors.divider)),
+                  ],
+                ),
+                const SizedBox(height: AppDimensions.dialogActionSpacing),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: () {
+                      controller.reset();
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(Icons.play_arrow_rounded, size: 28),
+                    label: Text(l10n.startGame.toUpperCase()),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.goldAction,
+                      foregroundColor: AppColors.textOnGold,
+                      padding: AppDimensions.dialogButtonPadding,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppDimensions.dialogButtonRadius,
+                        ),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: AppDimensions.dialogButtonTextSize,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.dialogButtonGap),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      controller.reset();
+                      Navigator.of(context).pop();
+                    },
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.tealText,
+                      side: const BorderSide(color: AppColors.cyan),
+                      padding: AppDimensions.dialogSecondaryButtonPadding,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppDimensions.dialogButtonRadius,
+                        ),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: AppDimensions.dialogButtonTextSize,
+                      ),
+                    ),
+                    child: const Text('NEW GAME'),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
+
+  String _winnerText(AppLocalizations l10n) =>
+      controller.turn == PieceColor.white ? l10n.computer : l10n.you;
 
   @override
   void dispose() {
@@ -85,81 +199,129 @@ class _ChessScreenState extends State<ChessScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final boardSize = (constraints.maxWidth - 32).clamp(280.0, 620.0);
-            return SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 28),
-              child: Center(
-                child: SizedBox(
-                  width: boardSize,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _header(l10n),
-                      const SizedBox(height: 26),
-                      _player(l10n, PieceColor.black, Icons.computer_outlined),
-                      const SizedBox(height: 12),
-                      _board(boardSize),
-                      const SizedBox(height: 12),
-                      _player(l10n, PieceColor.white, Icons.person_outline),
-                      const SizedBox(height: 24),
-                      _gameInfo(l10n),
-                    ],
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment(0, -.15),
+            radius: 1.15,
+            colors: [
+              AppColors.backgroundGameTop,
+              AppColors.backgroundGameMiddle,
+              AppColors.backgroundGameBottom,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // Keep the board inside the safe horizontal space on very small
+              // phones instead of forcing a 280px minimum and overflowing.
+              final boardSize = (constraints.maxWidth - 36)
+                  .clamp(
+                    AppDimensions.boardMinAvailableWidth,
+                    AppDimensions.boardMaxWidth,
+                  )
+                  .toDouble();
+              return SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(
+                  AppDimensions.boardContentHorizontalPadding,
+                  AppDimensions.boardContentTopPadding,
+                  AppDimensions.boardContentHorizontalPadding,
+                  AppDimensions.boardContentBottomPadding,
+                ),
+                child: Center(
+                  child: SizedBox(
+                    width: boardSize,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _header(l10n),
+                        const SizedBox(
+                          height: AppDimensions.playerGapBeforeBoard,
+                        ),
+                        _player(
+                          l10n,
+                          PieceColor.black,
+                          Icons.smart_toy_outlined,
+                        ),
+                        const SizedBox(
+                          height: AppDimensions.playerGapBeforeBoard,
+                        ),
+                        _board(boardSize),
+                        const SizedBox(
+                          height: AppDimensions.boardGapAfterBoard,
+                        ),
+                        _player(l10n, PieceColor.white, Icons.person_outline),
+                        const SizedBox(height: AppDimensions.statusGap),
+                        _statusBanner(l10n),
+                        const SizedBox(height: AppDimensions.actionsGap),
+                        _gameInfo(l10n),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
   }
 
-  Widget _header(AppLocalizations l10n) => Row(
+  Widget _header(AppLocalizations l10n) => Stack(
+    clipBehavior: Clip.none,
     children: [
-      Container(
-        width: 42,
-        height: 42,
-        decoration: BoxDecoration(
-          color: AppColors.accent,
-          borderRadius: BorderRadius.circular(13),
-        ),
-        child: const Icon(Icons.auto_awesome, color: AppColors.blackPiece),
-      ),
-      const SizedBox(width: 12),
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.brandName,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 3,
+      Column(
+        children: [
+          const Icon(
+            Icons.workspace_premium,
+            size: 38,
+            color: AppColors.goldCrown,
+          ),
+          const SizedBox(height: AppDimensions.headerTopGap),
+          Row(
+            children: [
+              const Expanded(child: Divider(color: AppColors.dividerGold)),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      l10n.brandName.toUpperCase(),
+                      maxLines: 1,
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                        color: AppColors.goldLight,
+                        fontSize: AppDimensions.headerBrandSize,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 2.5,
+                      ),
+                    ),
+                  ),
+                ),
               ),
+              const Expanded(child: Divider(color: AppColors.dividerGold)),
+            ],
+          ),
+          const SizedBox(height: AppDimensions.headerBottomGap),
+          Text(
+            l10n.brandTagline.toUpperCase(),
+            style: const TextStyle(
+              color: AppColors.textGameSecondary,
+              fontSize: AppDimensions.headerTaglineSize,
+              letterSpacing: 3,
             ),
-            const SizedBox(height: 2),
-            Text(
-              l10n.brandTagline,
-              style: const TextStyle(
-                color: AppColors.textSubtle,
-                fontSize: 10,
-                letterSpacing: 2,
-              ),
-            ),
-          ],
+          ),
+        ],
+      ),
+      Positioned(
+        right: -8,
+        top: 0,
+        child: IconButton(
+          onPressed: controller.reset,
+          tooltip: l10n.startGame,
+          icon: const Icon(Icons.refresh_rounded, color: AppColors.goldSoft),
         ),
-      ),
-      IconButton(
-        onPressed: controller.toggleFlip,
-        icon: const Icon(Icons.flip, color: AppColors.accent),
-      ),
-      IconButton(
-        onPressed: controller.reset,
-        icon: const Icon(Icons.refresh, color: AppColors.accent),
       ),
     ],
   );
@@ -172,65 +334,70 @@ class _ChessScreenState extends State<ChessScreen> {
         !controller.isThinking;
     final label = color == PieceColor.white ? l10n.white : l10n.black;
     final name = color == PieceColor.white ? l10n.you : l10n.computer;
-    return Row(
-      children: [
-        Container(
-          width: 34,
-          height: 34,
-          decoration: BoxDecoration(
-            color: color == PieceColor.white
-                ? AppColors.whitePlayer
-                : AppColors.blackPlayer,
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            icon,
-            size: 19,
-            color: color == PieceColor.white
-                ? AppColors.blackPlayer
-                : AppColors.accent,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(name, style: const TextStyle(fontWeight: FontWeight.w700)),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10,
-                color: active ? AppColors.accent : AppColors.textMuted,
-                letterSpacing: 1.5,
-              ),
-            ),
-          ],
-        ),
-        const Spacer(),
-        if (active)
+    return Container(
+      padding: AppDimensions.playerPadding,
+      decoration: BoxDecoration(
+        color: AppColors.panelPlayer,
+        border: Border.all(color: AppColors.playerBorderMuted),
+        borderRadius: BorderRadius.circular(22),
+      ),
+      child: Row(
+        children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            width: AppDimensions.playerAvatarSize,
+            height: AppDimensions.playerAvatarSize,
             decoration: BoxDecoration(
-              color: AppColors.successBackground,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              l10n.yourTurn,
-              style: const TextStyle(
-                color: AppColors.success,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1,
+              shape: BoxShape.circle,
+              color: color == PieceColor.white
+                  ? AppColors.playerWhite
+                  : AppColors.playerBlack,
+              border: Border.all(
+                color: AppColors.playerBorder,
+                width: AppDimensions.playerAvatarBorderWidth,
               ),
             ),
+            child: Icon(icon, size: 30, color: AppColors.playerIcon),
           ),
-      ],
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: AppDimensions.playerTextSize,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Text(
+                color == PieceColor.black
+                    ? 'LEVEL ${widget.difficulty.index + 1}'
+                    : active
+                    ? l10n.yourTurn.toUpperCase()
+                    : label.toUpperCase(),
+                style: TextStyle(
+                  fontSize: AppDimensions.playerMetaTextSize,
+                  color: active ? AppColors.success : AppColors.textMutedBlue,
+                  letterSpacing: 1.5,
+                  fontWeight: active ? FontWeight.w700 : FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
   Widget _board(double size) => Container(
+    padding: const EdgeInsets.all(AppDimensions.boardFramePadding),
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
+      color: AppColors.boardFrame,
+      borderRadius: BorderRadius.circular(18),
+      border: Border.all(
+        color: AppColors.boardBorder,
+        width: AppDimensions.boardFrameBorderWidth,
+      ),
       boxShadow: [
         BoxShadow(
           color: Colors.black.withValues(alpha: .35),
@@ -239,159 +406,208 @@ class _ChessScreenState extends State<ChessScreen> {
         ),
       ],
     ),
-    clipBehavior: Clip.antiAlias,
-    child: GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: 64,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 8,
-      ),
-      itemBuilder: (_, visualIndex) {
-        final index = controller.flipped ? 63 - visualIndex : visualIndex;
-        final row = visualIndex ~/ 8;
-        final col = visualIndex % 8;
-        final dark = (row + col).isOdd;
-        final piece = controller.board[index];
-        final selected = controller.selected == index;
-        final target = controller.availableMoves.contains(index);
-        final isLastMove =
-            controller.lastMove?.from == index ||
-            controller.lastMove?.to == index;
-        return GestureDetector(
-          onTap: () => controller.tapSquare(index),
-          child: Container(
-            color: selected
-                ? AppColors.selectedSquare
-                : isLastMove
-                ? dark
-                      ? AppColors.lastMoveDarkSquare
-                      : AppColors.lastMoveLightSquare
-                : dark
-                ? AppColors.blackSquare
-                : AppColors.whiteSquare,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                if (target)
-                  Container(
-                    width: piece == null ? 15 : 42,
-                    height: piece == null ? 15 : 42,
-                    decoration: BoxDecoration(
-                      color: piece == null
-                          ? AppColors.availableSquare
-                          : Colors.transparent,
-                      shape: BoxShape.circle,
-                      border: piece == null
-                          ? null
-                          : Border.all(
-                              color: AppColors.availableBorder,
-                              width: 3,
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 64,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 8,
+        ),
+        itemBuilder: (_, visualIndex) {
+          final index = controller.flipped ? 63 - visualIndex : visualIndex;
+          final row = visualIndex ~/ 8;
+          final col = visualIndex % 8;
+          final dark = (row + col).isOdd;
+          final piece = controller.board[index];
+          final selected = controller.selected == index;
+          final target = controller.availableMoves.contains(index);
+          final isLastMove =
+              controller.lastMove?.from == index ||
+              controller.lastMove?.to == index;
+          return GestureDetector(
+            onTap: () => controller.tapSquare(index),
+            child: Container(
+              color: selected
+                  ? AppColors.accentDark
+                  : isLastMove
+                  ? dark
+                        ? AppColors.lastMoveDarkSquare
+                        : AppColors.lastMoveLightSquare
+                  : dark
+                  ? AppColors.blackSquare
+                  : AppColors.whiteSquare,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  if (target)
+                    Container(
+                      width: piece == null
+                          ? AppDimensions.boardEmptyTargetSize
+                          : AppDimensions.boardPieceTargetSize,
+                      height: piece == null
+                          ? AppDimensions.boardEmptyTargetSize
+                          : AppDimensions.boardPieceTargetSize,
+                      decoration: BoxDecoration(
+                        color: piece == null
+                            ? AppColors.availableSquare
+                            : Colors.transparent,
+                        shape: BoxShape.circle,
+                        border: piece == null
+                            ? null
+                            : Border.all(
+                                color: AppColors.availableBorder,
+                                width: AppDimensions.boardTargetBorderWidth,
+                              ),
+                      ),
+                    ),
+                  if (piece != null)
+                    ColorFiltered(
+                      colorFilter: ColorFilter.mode(
+                        piece.color == PieceColor.white
+                            ? AppColors.whitePiece
+                            : AppColors.blackPiece,
+                        BlendMode.srcIn,
+                      ),
+                      child: Text(
+                        piece.symbol,
+                        style: TextStyle(
+                          fontSize: size / 11,
+                          height: AppDimensions.boardPieceTextHeight,
+                          color: Colors.white,
+                          shadows: const [
+                            Shadow(
+                              color: Colors.black54,
+                              offset: Offset(1, 2),
+                              blurRadius: 1,
                             ),
-                    ),
-                  ),
-                if (piece != null)
-                  ColorFiltered(
-                    colorFilter: ColorFilter.mode(
-                      piece.color == PieceColor.white
-                          ? AppColors.whitePiece
-                          : AppColors.blackPiece,
-                      BlendMode.srcIn,
-                    ),
-                    child: Text(
-                      piece.symbol,
-                      style: TextStyle(
-                        fontSize: size / 11,
-                        height: .9,
-                        color: Colors.white,
-                        shadows: const [
-                          Shadow(
-                            color: Colors.black54,
-                            offset: Offset(1, 2),
-                            blurRadius: 1,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                if (visualIndex >= 56)
-                  Positioned(
-                    bottom: 3,
-                    right: 4,
-                    child: Text(
-                      String.fromCharCode(
-                        97 + (controller.flipped ? 7 - col : col),
-                      ),
-                      style: TextStyle(
-                        fontSize: 9,
-                        color: dark
-                            ? AppColors.whiteSquare
-                            : AppColors.blackSquare,
-                      ),
-                    ),
-                  ),
-                if (visualIndex % 8 == 0)
-                  Positioned(
-                    top: 3,
-                    left: 4,
-                    child: Text(
-                      '${controller.flipped ? row + 1 : 8 - row}',
-                      style: TextStyle(
-                        fontSize: 9,
-                        color: dark
-                            ? AppColors.whiteSquare
-                            : AppColors.blackSquare,
+                  if (visualIndex >= 56)
+                    Positioned(
+                      bottom: 3,
+                      right: 4,
+                      child: Text(
+                        String.fromCharCode(
+                          97 + (controller.flipped ? 7 - col : col),
+                        ),
+                        style: TextStyle(
+                          fontSize: AppDimensions.boardCoordinateTextSize,
+                          color: dark
+                              ? AppColors.whiteSquare
+                              : AppColors.blackSquare,
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                  if (visualIndex % 8 == 0)
+                    Positioned(
+                      top: 3,
+                      left: 4,
+                      child: Text(
+                        '${controller.flipped ? row + 1 : 8 - row}',
+                        style: TextStyle(
+                          fontSize: AppDimensions.boardCoordinateTextSize,
+                          color: dark
+                              ? AppColors.whiteSquare
+                              : AppColors.blackSquare,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     ),
   );
 
-  Widget _gameInfo(AppLocalizations l10n) => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: AppColors.border),
-    ),
-    child: Row(
-      children: [
-        Icon(
-          controller.gameOver
-              ? Icons.emoji_events_outlined
-              : Icons.timer_outlined,
-          color: AppColors.accent,
-          size: 20,
+  Widget _gameInfo(AppLocalizations l10n) => Row(
+    children: [
+      Expanded(
+        child: _actionButton(Icons.undo_rounded, l10n.undo, controller.undo),
+      ),
+      const SizedBox(width: 12),
+      Expanded(
+        child: _actionButton(
+          Icons.rotate_right_rounded,
+          'ROTATE',
+          controller.toggleFlip,
         ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            _statusText(l10n),
-            style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
+    ],
+  );
+
+  Widget _statusBanner(AppLocalizations l10n) {
+    final status = _statusText(l10n);
+    final isActive =
+        controller.turn == PieceColor.white &&
+        !controller.gameOver &&
+        !controller.isThinking;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.panelStatus,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: isActive ? AppColors.statusActive : AppColors.statusBorder,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: AppDimensions.statusDotSize,
+            height: AppDimensions.statusDotSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isActive ? AppColors.statusDot : AppColors.statusInactive,
+            ),
           ),
-        ),
-        Text(
-          l10n.movesCount(controller.moves.length),
-          style: const TextStyle(
-            color: AppColors.textMuted,
-            fontSize: 11,
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              status,
+              style: const TextStyle(
+                fontSize: AppDimensions.statusTextSize,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Text(
+            l10n.movesCount(controller.moves.length),
+            style: const TextStyle(
+              color: AppColors.textMutedBlue,
+              fontSize: AppDimensions.moveCountTextSize,
+              letterSpacing: .7,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _actionButton(IconData icon, String label, VoidCallback onPressed) =>
+      OutlinedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon, size: 27),
+        label: Text(label.toUpperCase()),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.goldSoft,
+          side: const BorderSide(color: AppColors.buttonBorder),
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          textStyle: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
             letterSpacing: 1,
           ),
         ),
-        const SizedBox(width: 10),
-        IconButton(
-          onPressed: controller.undo,
-          icon: const Icon(Icons.undo, size: 20),
-          tooltip: l10n.undo,
-        ),
-      ],
-    ),
-  );
+      );
 
   String _statusText(AppLocalizations l10n) {
     switch (controller.status) {

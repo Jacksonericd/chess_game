@@ -61,15 +61,17 @@ class ChessAiService {
       return candidates[candidates.length ~/ 2];
     }
     candidates.sort((a, b) => _score(b).compareTo(_score(a)));
-    if (difficulty == AiDifficulty.easy || difficulty == AiDifficulty.medium) {
-      return candidates.first;
-    }
-    return _minimaxMove(
-      board,
-      color,
-      candidates,
-      difficulty == AiDifficulty.expert ? 4 : 3,
-    );
+    // A greedy material-only move is particularly bad in chess: it will
+    // happily move a queen onto a square where the opponent can capture it
+    // next turn. Even the easier levels should look at the opponent's reply.
+    final depth = switch (difficulty) {
+      AiDifficulty.easy => 2,
+      AiDifficulty.medium => 3,
+      AiDifficulty.hard => 4,
+      AiDifficulty.expert => 4,
+      AiDifficulty.beginner => 1,
+    };
+    return _minimaxMove(board, color, candidates, depth);
   }
 
   ChessMove _minimaxMove(
@@ -156,11 +158,15 @@ class ChessAiService {
       PieceType.queen: 900,
       PieceType.king: 20000,
     };
-    var score = board.fold(0, (total, piece) {
-      if (piece == null) return total;
+    var score = 0;
+    for (var index = 0; index < board.length; index++) {
+      final piece = board[index];
+      if (piece == null) continue;
       final value = values[piece.type]!;
-      return total + (piece.color == color ? value : -value);
-    });
+      final signedValue = piece.color == color ? value : -value;
+      final positional = _positionalBonus(piece, index);
+      score += signedValue + (piece.color == color ? positional : -positional);
+    }
     for (var index = 0; index < board.length; index++) {
       final piece = board[index];
       if (piece == null) continue;
@@ -171,6 +177,28 @@ class ChessAiService {
       }
     }
     return score;
+  }
+
+  int _positionalBonus(ChessPiece piece, int index) {
+    final row = index ~/ 8;
+    final column = index % 8;
+    final distanceFromCenter = (row - 3.5).abs() + (column - 3.5).abs();
+    final centerBonus = (7 - distanceFromCenter).round();
+    switch (piece.type) {
+      case PieceType.pawn:
+        final progress = piece.color == PieceColor.white ? 6 - row : row - 1;
+        return progress * 4 + centerBonus;
+      case PieceType.knight:
+      case PieceType.bishop:
+        return centerBonus * 3;
+      case PieceType.queen:
+        return centerBonus;
+      case PieceType.rook:
+        return row == (piece.color == PieceColor.white ? 1 : 6) ? 8 : 0;
+      case PieceType.king:
+        // Keep the king away from the centre in the middlegame.
+        return -centerBonus * 2;
+    }
   }
 
   int _score(ChessMove move) {

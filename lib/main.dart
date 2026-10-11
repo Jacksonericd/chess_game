@@ -6,7 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'core/services/app_open_ad_manager.dart';
-import 'core/theme/app_colors.dart';
+import 'core/theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
 import 'features/chess/presentation/screens/game_setup_screen.dart';
 import 'firebase_options.dart';
@@ -67,15 +67,7 @@ class _ChessAppState extends State<ChessApp> {
       GlobalCupertinoLocalizations.delegate,
     ],
     supportedLocales: AppLocalizations.supportedLocales,
-    theme: ThemeData(
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: AppColors.background,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.accent,
-        brightness: Brightness.dark,
-      ),
-      useMaterial3: true,
-    ),
+    theme: AppTheme.dark(),
     home: const GameSetupScreen(),
   );
 }
