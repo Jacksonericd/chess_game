@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:upgrader/upgrader.dart';
 
 import 'core/services/app_open_ad_manager.dart';
 import 'core/theme/app_theme.dart';
@@ -68,6 +69,12 @@ class _ChessAppState extends State<ChessApp> {
     ],
     supportedLocales: AppLocalizations.supportedLocales,
     theme: AppTheme.dark(),
-    home: const GameSetupScreen(),
+    home: UpgradeAlert(
+      barrierDismissible: false,
+      showIgnore: false,
+      showLater: false,
+      shouldPopScope: () => false,
+      child: const GameSetupScreen(),
+    ),
   );
 }
