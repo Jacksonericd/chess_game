@@ -2,7 +2,7 @@ name: chess_app
 description: "Chess game."
 publish_to: 'none'
 
-version: 1.0.3+4
+version: 1.0.4+5
 
 environment:
   sdk: ^3.11.4
@@ -17,6 +17,7 @@ dependencies:
   firebase_core: ^4.15.0
   firebase_analytics: ^12.6.0
   google_mobile_ads: ^9.1.0
+  upgrader: ^13.7.0
 
 dev_dependencies:
   flutter_test:
