@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:chess_app/main.dart';
+import 'package:chess_app/core/presentation/widgets/banner_ad_widget.dart';
 
 void main() {
   testWidgets('setup screen fits common portrait and landscape sizes', (
@@ -20,6 +21,11 @@ void main() {
 
       expect(find.text('Choose your opponent\'s difficulty'), findsOneWidget);
       expect(find.text('START GAME'), findsOneWidget);
+      expect(find.byType(BannerAdWidget), findsOneWidget);
+      expect(
+        tester.getSize(find.byType(BannerAdWidget)).height,
+        greaterThanOrEqualTo(50),
+      );
       expect(
         tester.getRect(find.text('START GAME')).bottom,
         lessThanOrEqualTo(size.height),
@@ -28,6 +34,11 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('UNDO'), findsOneWidget);
       expect(find.text('ROTATE'), findsOneWidget);
+      expect(find.byType(BannerAdWidget), findsOneWidget);
+      expect(
+        tester.getSize(find.byType(BannerAdWidget)).height,
+        greaterThanOrEqualTo(50),
+      );
       final rook = tester.widget<Text>(
         find
             .byWidgetPredicate(

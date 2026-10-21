@@ -97,11 +97,18 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
     final size = _adSize;
     final ad = _bannerAd;
-    if (size == null) return const SizedBox.shrink();
     return SizedBox(
-      width: size.width.toDouble(),
-      height: size.height.toDouble(),
-      child: _isLoaded && ad != null ? AdWidget(ad: ad) : null,
+      width: width.toDouble(),
+      height: (size?.height ?? AdSize.banner.height).toDouble(),
+      child: _isLoaded && ad != null && size != null
+          ? Center(
+              child: SizedBox(
+                width: size.width.toDouble(),
+                height: size.height.toDouble(),
+                child: AdWidget(ad: ad),
+              ),
+            )
+          : null,
     );
   }
 }
