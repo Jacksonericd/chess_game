@@ -15,6 +15,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get brandName => 'CHESS';
 
   @override
+  String get appSuffix => 'APP';
+
+  @override
   String get brandTagline => 'CLASSIC BOARD';
 
   @override
@@ -45,6 +48,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get undo => 'Undo';
+
+  @override
+  String get rotate => 'Rotate';
+
+  @override
+  String get newGame => 'New game';
+
+  @override
+  String levelLabel(int level) {
+    return 'LEVEL $level';
+  }
 
   @override
   String get whiteToMove => 'White to move';
@@ -93,6 +107,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get check => 'CHECK';
+
+  @override
+  String get checkmate => 'CHECKMATE';
 
   @override
   String get checkmateWhiteWins => 'CHECKMATE — YOU WIN';
