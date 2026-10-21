@@ -2,7 +2,7 @@ name: chess_app
 description: "Chess game."
 publish_to: 'none'
 
-version: 1.0.1+2
+version: 1.0.3+4
 
 environment:
   sdk: ^3.11.4
@@ -28,4 +28,5 @@ flutter:
   generate: true
 
   uses-material-design: true
-
+  assets:
+    - assets/icons/app_icon.png

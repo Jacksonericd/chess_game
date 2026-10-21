@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/app_assets.dart';
+import '../../../../core/presentation/widgets/banner_ad_widget.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimensions.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -57,128 +59,121 @@ class _ChessScreenState extends State<ChessScreen> {
           horizontal: AppDimensions.dialogHorizontalInset,
           vertical: AppDimensions.dialogVerticalInset,
         ),
-        child: SingleChildScrollView(
-          child: Container(
-            constraints: const BoxConstraints(
-              maxWidth: AppDimensions.dialogMaxWidth,
+        child: Container(
+          padding: AppDimensions.dialogContentPadding,
+          decoration: BoxDecoration(
+            color: AppColors.panelDark,
+            borderRadius: BorderRadius.circular(AppDimensions.dialogCardRadius),
+            border: Border.all(
+              color: AppColors.goldOutline,
+              width: AppDimensions.dialogBorderWidth,
             ),
-            padding: AppDimensions.dialogContentPadding,
-            decoration: BoxDecoration(
-              color: AppColors.panelDark,
-              borderRadius: BorderRadius.circular(
-                AppDimensions.dialogCardRadius,
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.goldGlow.withValues(alpha: .22),
+                blurRadius: AppDimensions.dialogShadowBlur,
+                spreadRadius: AppDimensions.dialogShadowSpread,
               ),
-              border: Border.all(
-                color: AppColors.goldOutline,
-                width: AppDimensions.dialogBorderWidth,
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.workspace_premium,
+                size: 72,
+                color: AppColors.gold,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.goldGlow.withValues(alpha: .22),
-                  blurRadius: AppDimensions.dialogShadowBlur,
-                  spreadRadius: AppDimensions.dialogShadowSpread,
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.workspace_premium,
-                  size: 72,
+              const SizedBox(height: AppDimensions.dialogTitleSpacing),
+              Text(
+                l10n.checkmate,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                   color: AppColors.gold,
+                  fontSize: AppDimensions.dialogTitleSize,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 2.5,
                 ),
-                const SizedBox(height: AppDimensions.dialogTitleSpacing),
-                Text(
-                  'CHECKMATE',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                    color: AppColors.gold,
-                    fontSize: AppDimensions.dialogTitleSize,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 2.5,
+              ),
+              const SizedBox(height: AppDimensions.dialogTitleSpacing),
+              Text(
+                _winnerText(l10n),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: AppDimensions.dialogWinnerSize,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: AppDimensions.dialogWinnerSpacing),
+              Row(
+                children: [
+                  const Expanded(child: Divider(color: AppColors.divider)),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppDimensions.dialogDividerPadding,
+                    ),
+                    child: Icon(
+                      Icons.diamond,
+                      size: 14,
+                      color: AppColors.goldAction,
+                    ),
                   ),
-                ),
-                const SizedBox(height: AppDimensions.dialogTitleSpacing),
-                Text(
-                  _winnerText(l10n),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: AppDimensions.dialogWinnerSize,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: AppDimensions.dialogWinnerSpacing),
-                Row(
-                  children: [
-                    const Expanded(child: Divider(color: AppColors.divider)),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppDimensions.dialogDividerPadding,
-                      ),
-                      child: Icon(
-                        Icons.diamond,
-                        size: 14,
-                        color: AppColors.goldAction,
+                  const Expanded(child: Divider(color: AppColors.divider)),
+                ],
+              ),
+              const SizedBox(height: AppDimensions.dialogActionSpacing),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  onPressed: () {
+                    controller.reset();
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(Icons.play_arrow_rounded, size: 28),
+                  label: Text(l10n.startGame.toUpperCase()),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppColors.goldAction,
+                    foregroundColor: AppColors.textOnGold,
+                    padding: AppDimensions.dialogButtonPadding,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.dialogButtonRadius,
                       ),
                     ),
-                    const Expanded(child: Divider(color: AppColors.divider)),
-                  ],
-                ),
-                const SizedBox(height: AppDimensions.dialogActionSpacing),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    onPressed: () {
-                      controller.reset();
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(Icons.play_arrow_rounded, size: 28),
-                    label: Text(l10n.startGame.toUpperCase()),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppColors.goldAction,
-                      foregroundColor: AppColors.textOnGold,
-                      padding: AppDimensions.dialogButtonPadding,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppDimensions.dialogButtonRadius,
-                        ),
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: AppDimensions.dialogButtonTextSize,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.2,
-                      ),
+                    textStyle: const TextStyle(
+                      fontSize: AppDimensions.dialogButtonTextSize,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.2,
                     ),
                   ),
                 ),
-                const SizedBox(height: AppDimensions.dialogButtonGap),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      controller.reset();
-                      Navigator.of(context).pop();
-                    },
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.tealText,
-                      side: const BorderSide(color: AppColors.cyan),
-                      padding: AppDimensions.dialogSecondaryButtonPadding,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppDimensions.dialogButtonRadius,
-                        ),
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: AppDimensions.dialogButtonTextSize,
+              ),
+              const SizedBox(height: AppDimensions.dialogButtonGap),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: () {
+                    controller.reset();
+                    Navigator.of(context).pop();
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.tealText,
+                    side: const BorderSide(color: AppColors.cyan),
+                    padding: AppDimensions.dialogSecondaryButtonPadding,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.dialogButtonRadius,
                       ),
                     ),
-                    child: const Text('NEW GAME'),
+                    textStyle: const TextStyle(
+                      fontSize: AppDimensions.dialogButtonTextSize,
+                    ),
                   ),
+                  child: Text(l10n.newGame.toUpperCase()),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -198,6 +193,16 @@ class _ChessScreenState extends State<ChessScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final screenSize = MediaQuery.sizeOf(context);
+    final safePadding = MediaQuery.paddingOf(context);
+    final availableWidth = screenSize.width - safePadding.horizontal;
+    final landscape =
+        MediaQuery.orientationOf(context) == Orientation.landscape;
+    final scale = (screenSize.height / 700).clamp(.65, 1.0).toDouble();
+    final horizontalPadding = 12 * scale;
+    final boardSide = landscape ? screenSize.height : screenSize.width;
+    final board = AspectRatio(aspectRatio: 1, child: _board(boardSide));
+
     return Scaffold(
       body: DecoratedBox(
         decoration: const BoxDecoration(
@@ -212,73 +217,107 @@ class _ChessScreenState extends State<ChessScreen> {
           ),
         ),
         child: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              // Keep the board inside the safe horizontal space on very small
-              // phones instead of forcing a 280px minimum and overflowing.
-              final boardSize = (constraints.maxWidth - 36)
-                  .clamp(
-                    AppDimensions.boardMinAvailableWidth,
-                    AppDimensions.boardMaxWidth,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+              horizontalPadding,
+              12 * scale,
+              horizontalPadding,
+              12 * scale,
+            ),
+            child: landscape
+                ? Row(
+                    children: [
+                      Expanded(flex: 2, child: Center(child: board)),
+                      SizedBox(width: 14 * scale),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _header(l10n, scale: scale),
+                            SizedBox(height: 8 * scale),
+                            _player(
+                              l10n,
+                              PieceColor.black,
+                              Icons.smart_toy_outlined,
+                              scale: scale,
+                            ),
+                            SizedBox(height: 6 * scale),
+                            _player(
+                              l10n,
+                              PieceColor.white,
+                              Icons.person_outline,
+                              scale: scale,
+                            ),
+                            const Spacer(),
+                            _statusBanner(l10n, scale: scale),
+                            SizedBox(height: 8 * scale),
+                            _gameInfo(l10n, scale: scale),
+                            const Spacer(),
+                            Center(
+                              child: BannerAdWidget(
+                                maxWidth:
+                                    (availableWidth -
+                                        horizontalPadding * 2 -
+                                        14 * scale) /
+                                    3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   )
-                  .toDouble();
-              return SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(
-                  AppDimensions.boardContentHorizontalPadding,
-                  AppDimensions.boardContentTopPadding,
-                  AppDimensions.boardContentHorizontalPadding,
-                  AppDimensions.boardContentBottomPadding,
-                ),
-                child: Center(
-                  child: SizedBox(
-                    width: boardSize,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _header(l10n),
-                        const SizedBox(
-                          height: AppDimensions.playerGapBeforeBoard,
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _header(l10n, scale: scale),
+                      SizedBox(height: 8 * scale),
+                      _player(
+                        l10n,
+                        PieceColor.black,
+                        Icons.smart_toy_outlined,
+                        scale: scale,
+                      ),
+                      SizedBox(height: 8 * scale),
+                      Expanded(child: Center(child: board)),
+                      SizedBox(height: 8 * scale),
+                      _player(
+                        l10n,
+                        PieceColor.white,
+                        Icons.person_outline,
+                        scale: scale,
+                      ),
+                      SizedBox(height: 8 * scale),
+                      _statusBanner(l10n, scale: scale),
+                      SizedBox(height: 8 * scale),
+                      _gameInfo(l10n, scale: scale),
+                      Center(
+                        child: BannerAdWidget(
+                          maxWidth: availableWidth - horizontalPadding * 2,
                         ),
-                        _player(
-                          l10n,
-                          PieceColor.black,
-                          Icons.smart_toy_outlined,
-                        ),
-                        const SizedBox(
-                          height: AppDimensions.playerGapBeforeBoard,
-                        ),
-                        _board(boardSize),
-                        const SizedBox(
-                          height: AppDimensions.boardGapAfterBoard,
-                        ),
-                        _player(l10n, PieceColor.white, Icons.person_outline),
-                        const SizedBox(height: AppDimensions.statusGap),
-                        _statusBanner(l10n),
-                        const SizedBox(height: AppDimensions.actionsGap),
-                        _gameInfo(l10n),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ),
-              );
-            },
           ),
         ),
       ),
     );
   }
 
-  Widget _header(AppLocalizations l10n) => Stack(
+  Widget _header(AppLocalizations l10n, {required double scale}) => Stack(
     clipBehavior: Clip.none,
     children: [
       Column(
         children: [
-          const Icon(
-            Icons.workspace_premium,
-            size: 38,
-            color: AppColors.goldCrown,
+          ClipOval(
+            child: Image.asset(
+              AppAssets.appIcon,
+              width: 38 * scale,
+              height: 38 * scale,
+              fit: BoxFit.cover,
+            ),
           ),
-          const SizedBox(height: AppDimensions.headerTopGap),
+          SizedBox(height: AppDimensions.headerTopGap * scale),
           Row(
             children: [
               const Expanded(child: Divider(color: AppColors.dividerGold)),
@@ -292,7 +331,7 @@ class _ChessScreenState extends State<ChessScreen> {
                       maxLines: 1,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
                         color: AppColors.goldLight,
-                        fontSize: AppDimensions.headerBrandSize,
+                        fontSize: AppDimensions.headerBrandSize * scale,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 2.5,
                       ),
@@ -303,12 +342,12 @@ class _ChessScreenState extends State<ChessScreen> {
               const Expanded(child: Divider(color: AppColors.dividerGold)),
             ],
           ),
-          const SizedBox(height: AppDimensions.headerBottomGap),
+          SizedBox(height: AppDimensions.headerBottomGap * scale),
           Text(
             l10n.brandTagline.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.textGameSecondary,
-              fontSize: AppDimensions.headerTaglineSize,
+              fontSize: AppDimensions.headerTaglineSize * scale,
               letterSpacing: 3,
             ),
           ),
@@ -326,7 +365,12 @@ class _ChessScreenState extends State<ChessScreen> {
     ],
   );
 
-  Widget _player(AppLocalizations l10n, PieceColor color, IconData icon) {
+  Widget _player(
+    AppLocalizations l10n,
+    PieceColor color,
+    IconData icon, {
+    required double scale,
+  }) {
     final active =
         color == PieceColor.white &&
         controller.turn == color &&
@@ -335,7 +379,10 @@ class _ChessScreenState extends State<ChessScreen> {
     final label = color == PieceColor.white ? l10n.white : l10n.black;
     final name = color == PieceColor.white ? l10n.you : l10n.computer;
     return Container(
-      padding: AppDimensions.playerPadding,
+      padding: EdgeInsets.symmetric(
+        horizontal: 14 * scale,
+        vertical: 10 * scale,
+      ),
       decoration: BoxDecoration(
         color: AppColors.panelPlayer,
         border: Border.all(color: AppColors.playerBorderMuted),
@@ -344,8 +391,8 @@ class _ChessScreenState extends State<ChessScreen> {
       child: Row(
         children: [
           Container(
-            width: AppDimensions.playerAvatarSize,
-            height: AppDimensions.playerAvatarSize,
+            width: AppDimensions.playerAvatarSize * scale,
+            height: AppDimensions.playerAvatarSize * scale,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: color == PieceColor.white
@@ -358,25 +405,25 @@ class _ChessScreenState extends State<ChessScreen> {
             ),
             child: Icon(icon, size: 30, color: AppColors.playerIcon),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12 * scale),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 name,
-                style: const TextStyle(
-                  fontSize: AppDimensions.playerTextSize,
+                style: TextStyle(
+                  fontSize: AppDimensions.playerTextSize * scale,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               Text(
                 color == PieceColor.black
-                    ? 'LEVEL ${widget.difficulty.index + 1}'
+                    ? l10n.levelLabel(widget.difficulty.index + 1)
                     : active
                     ? l10n.yourTurn.toUpperCase()
                     : label.toUpperCase(),
                 style: TextStyle(
-                  fontSize: AppDimensions.playerMetaTextSize,
+                  fontSize: AppDimensions.playerMetaTextSize * scale,
                   color: active ? AppColors.success : AppColors.textMutedBlue,
                   letterSpacing: 1.5,
                   fontWeight: active ? FontWeight.w700 : FontWeight.w400,
@@ -470,19 +517,22 @@ class _ChessScreenState extends State<ChessScreen> {
                             : AppColors.blackPiece,
                         BlendMode.srcIn,
                       ),
-                      child: Text(
-                        piece.symbol,
-                        style: TextStyle(
-                          fontSize: size / 11,
-                          height: AppDimensions.boardPieceTextHeight,
-                          color: Colors.white,
-                          shadows: const [
-                            Shadow(
-                              color: Colors.black54,
-                              offset: Offset(1, 2),
-                              blurRadius: 1,
-                            ),
-                          ],
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          piece.symbol,
+                          style: TextStyle(
+                            fontSize: size / 11,
+                            height: AppDimensions.boardPieceTextHeight,
+                            color: Colors.white,
+                            shadows: const [
+                              Shadow(
+                                color: Colors.black54,
+                                offset: Offset(1, 2),
+                                blurRadius: 1,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -525,30 +575,39 @@ class _ChessScreenState extends State<ChessScreen> {
     ),
   );
 
-  Widget _gameInfo(AppLocalizations l10n) => Row(
+  Widget _gameInfo(AppLocalizations l10n, {required double scale}) => Row(
     children: [
       Expanded(
-        child: _actionButton(Icons.undo_rounded, l10n.undo, controller.undo),
+        child: _actionButton(
+          Icons.undo_rounded,
+          l10n.undo,
+          controller.undo,
+          scale: scale,
+        ),
       ),
       const SizedBox(width: 12),
       Expanded(
         child: _actionButton(
           Icons.rotate_right_rounded,
-          'ROTATE',
+          l10n.rotate,
           controller.toggleFlip,
+          scale: scale,
         ),
       ),
     ],
   );
 
-  Widget _statusBanner(AppLocalizations l10n) {
+  Widget _statusBanner(AppLocalizations l10n, {required double scale}) {
     final status = _statusText(l10n);
     final isActive =
         controller.turn == PieceColor.white &&
         !controller.gameOver &&
         !controller.isThinking;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(
+        horizontal: 16 * scale,
+        vertical: 12 * scale,
+      ),
       decoration: BoxDecoration(
         color: AppColors.panelStatus,
         borderRadius: BorderRadius.circular(18),
@@ -559,19 +618,19 @@ class _ChessScreenState extends State<ChessScreen> {
       child: Row(
         children: [
           Container(
-            width: AppDimensions.statusDotSize,
-            height: AppDimensions.statusDotSize,
+            width: AppDimensions.statusDotSize * scale,
+            height: AppDimensions.statusDotSize * scale,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isActive ? AppColors.statusDot : AppColors.statusInactive,
             ),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10 * scale),
           Expanded(
             child: Text(
               status,
-              style: const TextStyle(
-                fontSize: AppDimensions.statusTextSize,
+              style: TextStyle(
+                fontSize: AppDimensions.statusTextSize * scale,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -589,25 +648,27 @@ class _ChessScreenState extends State<ChessScreen> {
     );
   }
 
-  Widget _actionButton(IconData icon, String label, VoidCallback onPressed) =>
-      OutlinedButton.icon(
-        onPressed: onPressed,
-        icon: Icon(icon, size: 27),
-        label: Text(label.toUpperCase()),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.goldSoft,
-          side: const BorderSide(color: AppColors.buttonBorder),
-          padding: const EdgeInsets.symmetric(vertical: 18),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          textStyle: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 1,
-          ),
-        ),
-      );
+  Widget _actionButton(
+    IconData icon,
+    String label,
+    VoidCallback onPressed, {
+    required double scale,
+  }) => OutlinedButton.icon(
+    onPressed: onPressed,
+    icon: Icon(icon, size: 27 * scale),
+    label: Text(label.toUpperCase()),
+    style: OutlinedButton.styleFrom(
+      foregroundColor: AppColors.goldSoft,
+      side: const BorderSide(color: AppColors.buttonBorder),
+      padding: EdgeInsets.symmetric(vertical: 18 * scale),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      textStyle: const TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 1,
+      ),
+    ),
+  );
 
   String _statusText(AppLocalizations l10n) {
     switch (controller.status) {
