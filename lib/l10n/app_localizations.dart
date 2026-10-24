@@ -106,6 +106,12 @@ abstract class AppLocalizations {
   /// **'CHESS'**
   String get brandName;
 
+  /// No description provided for @appSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'APP'**
+  String get appSuffix;
+
   /// No description provided for @brandTagline.
   ///
   /// In en, this message translates to:
@@ -165,6 +171,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Undo'**
   String get undo;
+
+  /// No description provided for @rotate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate'**
+  String get rotate;
+
+  /// No description provided for @newGame.
+  ///
+  /// In en, this message translates to:
+  /// **'New game'**
+  String get newGame;
+
+  /// No description provided for @levelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'LEVEL {level}'**
+  String levelLabel(int level);
 
   /// No description provided for @whiteToMove.
   ///
@@ -261,6 +285,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'CHECK'**
   String get check;
+
+  /// No description provided for @checkmate.
+  ///
+  /// In en, this message translates to:
+  /// **'CHECKMATE'**
+  String get checkmate;
 
   /// No description provided for @checkmateWhiteWins.
   ///
