@@ -1,7 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AppOpenAdManager {
-  static const adUnitId = 'ca-app-pub-1467587305582185/2466568508';
+  static const adUnitId = 'ca-app-pub-1467587305582185/5437171180';
 
   AppOpenAd? _appOpenAd;
   DateTime? _loadedAt;
@@ -26,8 +27,9 @@ class AppOpenAdManager {
             showAdIfAvailable();
           }
         },
-        onAdFailedToLoad: (_) {
+        onAdFailedToLoad: (error) {
           _isLoading = false;
+          debugPrint('App-open ad failed to load: $error');
         },
       ),
     );

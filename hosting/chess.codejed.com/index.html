@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CodeJed Chess is a single-player chess game for Android.">
+  <title>CodeJed Chess</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #20251f;
+      background: #f4f5ef;
+    }
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    main {
+      width: min(100%, 560px);
+      padding: clamp(28px, 7vw, 52px);
+      border: 1px solid #e1e4da;
+      border-radius: 24px;
+      background: #fff;
+      box-shadow: 0 18px 60px rgb(34 45 31 / 8%);
+    }
+    .mark {
+      display: grid;
+      width: 56px;
+      height: 56px;
+      place-items: center;
+      border-radius: 16px;
+      color: #fff;
+      background: #344a36;
+      font-size: 30px;
+    }
+    h1 { margin: 24px 0 10px; font-size: clamp(2rem, 8vw, 3rem); letter-spacing: -0.04em; }
+    p { color: #596258; line-height: 1.65; }
+    .button {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 13px 20px;
+      border-radius: 12px;
+      color: #fff;
+      background: #344a36;
+      font-weight: 650;
+      text-decoration: none;
+    }
+    .button:hover, .button:focus-visible { background: #263a28; }
+    .contact { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e8eae4; font-size: 0.95rem; }
+    a:not(.button) { color: #344a36; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="mark" aria-hidden="true">♞</div>
+    <h1>CodeJed Chess</h1>
+    <p>A single-player chess game for Android. Choose your difficulty and play a game whenever you like.</p>
+    <p>Download the game from Google Play using the button below.</p>
+    <a class="button" href="https://play.google.com/store/apps/details?id=com.jed.chess">Get it on Google Play</a>
+    <p class="contact">Need help? <a href="mailto:jacksoneric999@gmail.com">jacksoneric999@gmail.com</a></p>
+  </main>
+</body>
+</html>

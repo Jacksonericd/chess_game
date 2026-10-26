@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/presentation/widgets/banner_ad_widget.dart';
+import '../../../../core/services/interstitial_ad_manager.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimensions.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -20,11 +21,13 @@ class ChessScreen extends StatefulWidget {
 
 class _ChessScreenState extends State<ChessScreen> {
   late final ChessController controller;
+  late final InterstitialAdManager _interstitialAdManager;
   bool _checkmateDialogShown = false;
 
   @override
   void initState() {
     super.initState();
+    _interstitialAdManager = InterstitialAdManager()..loadAd();
     controller = ChessController(difficulty: widget.difficulty)
       ..addListener(_refresh);
   }
@@ -49,6 +52,7 @@ class _ChessScreenState extends State<ChessScreen> {
 
   Future<void> _showCheckmateDialog() async {
     final l10n = AppLocalizations.of(context);
+    final showDialogBanner = MediaQuery.sizeOf(context).height >= 700;
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -123,12 +127,34 @@ class _ChessScreenState extends State<ChessScreen> {
                 ],
               ),
               const SizedBox(height: AppDimensions.dialogActionSpacing),
+              if (showDialogBanner) ...[
+                Center(
+                  child: BannerAdWidget(
+                    maxWidth: (MediaQuery.sizeOf(context).width - 80)
+                        .clamp(1.0, AppDimensions.dialogMaxWidth - 44)
+                        .toDouble(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Center(
+                  child: BannerAdWidget(
+                    maxWidth: (MediaQuery.sizeOf(context).width - 80)
+                        .clamp(1.0, AppDimensions.dialogMaxWidth - 44)
+                        .toDouble(),
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.dialogActionSpacing),
+              ],
               SizedBox(
                 width: double.infinity,
                 child: FilledButton.icon(
                   onPressed: () {
-                    controller.reset();
                     Navigator.of(context).pop();
+                    _interstitialAdManager.show(
+                      onFinished: () {
+                        if (mounted) controller.reset();
+                      },
+                    );
                   },
                   icon: const Icon(Icons.play_arrow_rounded, size: 28),
                   label: Text(l10n.startGame.toUpperCase()),
@@ -154,8 +180,12 @@ class _ChessScreenState extends State<ChessScreen> {
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () {
-                    controller.reset();
                     Navigator.of(context).pop();
+                    _interstitialAdManager.show(
+                      onFinished: () {
+                        if (mounted) controller.reset();
+                      },
+                    );
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.tealText,
@@ -187,6 +217,7 @@ class _ChessScreenState extends State<ChessScreen> {
   void dispose() {
     controller.removeListener(_refresh);
     controller.dispose();
+    _interstitialAdManager.dispose();
     super.dispose();
   }
 
@@ -201,6 +232,7 @@ class _ChessScreenState extends State<ChessScreen> {
     final scale = (screenSize.height / 700).clamp(.65, 1.0).toDouble();
     final horizontalPadding = 12 * scale;
     final boardSide = landscape ? screenSize.height : screenSize.width;
+    final showDialogBanner = screenSize.height >= 700;
     final board = AspectRatio(aspectRatio: 1, child: _board(boardSide));
 
     return Scaffold(
@@ -250,18 +282,17 @@ class _ChessScreenState extends State<ChessScreen> {
                             ),
                             const Spacer(),
                             _statusBanner(l10n, scale: scale),
-                            SizedBox(height: 8 * scale),
-                            _gameInfo(l10n, scale: scale),
                             const Spacer(),
-                            Center(
-                              child: BannerAdWidget(
-                                maxWidth:
-                                    (availableWidth -
-                                        horizontalPadding * 2 -
-                                        14 * scale) /
-                                    3,
+                            if (!(_checkmateDialogShown && showDialogBanner))
+                              Center(
+                                child: BannerAdWidget(
+                                  maxWidth:
+                                      (availableWidth -
+                                          horizontalPadding * 2 -
+                                          14 * scale) /
+                                      3,
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -289,13 +320,12 @@ class _ChessScreenState extends State<ChessScreen> {
                       ),
                       SizedBox(height: 8 * scale),
                       _statusBanner(l10n, scale: scale),
-                      SizedBox(height: 8 * scale),
-                      _gameInfo(l10n, scale: scale),
-                      Center(
-                        child: BannerAdWidget(
-                          maxWidth: availableWidth - horizontalPadding * 2,
+                      if (!(_checkmateDialogShown && showDialogBanner))
+                        Center(
+                          child: BannerAdWidget(
+                            maxWidth: availableWidth - horizontalPadding * 2,
+                          ),
                         ),
-                      ),
                     ],
                   ),
           ),
@@ -575,28 +605,6 @@ class _ChessScreenState extends State<ChessScreen> {
     ),
   );
 
-  Widget _gameInfo(AppLocalizations l10n, {required double scale}) => Row(
-    children: [
-      Expanded(
-        child: _actionButton(
-          Icons.undo_rounded,
-          l10n.undo,
-          controller.undo,
-          scale: scale,
-        ),
-      ),
-      const SizedBox(width: 12),
-      Expanded(
-        child: _actionButton(
-          Icons.rotate_right_rounded,
-          l10n.rotate,
-          controller.toggleFlip,
-          scale: scale,
-        ),
-      ),
-    ],
-  );
-
   Widget _statusBanner(AppLocalizations l10n, {required double scale}) {
     final status = _statusText(l10n);
     final isActive =
@@ -643,31 +651,33 @@ class _ChessScreenState extends State<ChessScreen> {
               letterSpacing: .7,
             ),
           ),
+          const SizedBox(width: 4),
+          _controlIconButton(
+            icon: Icons.undo_rounded,
+            tooltip: l10n.undo,
+            onPressed: controller.undo,
+          ),
+          _controlIconButton(
+            icon: Icons.rotate_right_rounded,
+            tooltip: l10n.rotate,
+            onPressed: controller.toggleFlip,
+          ),
         ],
       ),
     );
   }
 
-  Widget _actionButton(
-    IconData icon,
-    String label,
-    VoidCallback onPressed, {
-    required double scale,
-  }) => OutlinedButton.icon(
+  Widget _controlIconButton({
+    required IconData icon,
+    required String tooltip,
+    required VoidCallback onPressed,
+  }) => IconButton(
     onPressed: onPressed,
-    icon: Icon(icon, size: 27 * scale),
-    label: Text(label.toUpperCase()),
-    style: OutlinedButton.styleFrom(
-      foregroundColor: AppColors.goldSoft,
-      side: const BorderSide(color: AppColors.buttonBorder),
-      padding: EdgeInsets.symmetric(vertical: 18 * scale),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      textStyle: const TextStyle(
-        fontSize: 13,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 1,
-      ),
-    ),
+    tooltip: tooltip,
+    visualDensity: VisualDensity.compact,
+    constraints: const BoxConstraints.tightFor(width: 36, height: 36),
+    padding: EdgeInsets.zero,
+    icon: Icon(icon, size: 20, color: AppColors.goldSoft),
   );
 
   String _statusText(AppLocalizations l10n) {

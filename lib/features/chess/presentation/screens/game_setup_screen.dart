@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_assets.dart';
-import '../../../../core/presentation/widgets/banner_ad_widget.dart';
+import '../../../../core/presentation/widgets/native_ad_widget.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimensions.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -130,7 +130,7 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
                     ),
                   ),
                 ),
-                Center(child: BannerAdWidget(maxWidth: width)),
+                const NativeAdWidget(),
                 const SizedBox(height: 8),
                 SizedBox(
                   width: double.infinity,
