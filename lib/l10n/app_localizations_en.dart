@@ -119,4 +119,119 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stalemate => 'STALEMATE — DRAW';
+
+  @override
+  String get playSolo => 'PLAY SOLO';
+
+  @override
+  String get dashboard => 'Dashboard';
+
+  @override
+  String get startPlaying => 'Start playing';
+
+  @override
+  String get play => 'Play';
+
+  @override
+  String get availableOnGooglePlay => 'AVAILABLE ON GOOGLE PLAY';
+
+  @override
+  String get androidApp => 'Android app';
+
+  @override
+  String get chessForAndroid => 'Chess for Android';
+
+  @override
+  String get getTheApp => 'Get the app';
+
+  @override
+  String get quietPlaceToPlay => 'A QUIET PLACE TO PLAY';
+
+  @override
+  String get heroTitle => 'Think ahead.\nMake your move.';
+
+  @override
+  String get heroDescription =>
+      'A focused chess game against a computer opponent, with five levels, a readable board, and no account required.';
+
+  @override
+  String get playAMatch => 'Play a match';
+
+  @override
+  String get levels => 'levels';
+
+  @override
+  String get boardViews => 'board views';
+
+  @override
+  String get signUps => 'sign-ups';
+
+  @override
+  String get yourBoard => 'YOUR BOARD';
+
+  @override
+  String get simpleMatchFlow => 'A simple match flow';
+
+  @override
+  String get chooseLevel => 'Choose a level';
+
+  @override
+  String get chooseLevelDescription => 'Pick the opponent that fits your mood.';
+
+  @override
+  String get readBoard => 'Read the board';
+
+  @override
+  String get readBoardDescription => 'Select a piece to see its legal moves.';
+
+  @override
+  String get playItThrough => 'Play it through';
+
+  @override
+  String get playItThroughDescription =>
+      'Undo or rotate whenever you need a new view.';
+
+  @override
+  String get takeBoardWithYou => 'Take the board with you.';
+
+  @override
+  String get androidAvailability =>
+      'The Android app is available on Google Play for games away from the browser.';
+
+  @override
+  String get openGooglePlay => 'Open Google Play';
+
+  @override
+  String get liveMatch => 'LIVE MATCH';
+
+  @override
+  String get leaveMatch => 'Leave match';
+
+  @override
+  String get setUpMatch => 'Set up a match';
+
+  @override
+  String get chooseComputerDifficulty =>
+      'Choose how hard the computer should play.';
+
+  @override
+  String get openBoard => 'Open board';
+
+  @override
+  String get playAgain => 'Play again';
+
+  @override
+  String get checkmateComputerWins => 'Checkmate · Computer wins';
+
+  @override
+  String get checkmateYouWin => 'Checkmate · You win';
+
+  @override
+  String get stalemateDraw => 'Stalemate · Draw';
+
+  @override
+  String get yourMove => 'Your move';
+
+  @override
+  String get footerTagline => 'CHESS · A focused single-player board';
 }
