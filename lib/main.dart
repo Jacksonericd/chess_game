@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,14 +11,21 @@ import 'core/services/app_open_ad_manager.dart';
 import 'core/theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
 import 'features/chess/presentation/screens/game_setup_screen.dart';
+import 'presentation/web/web_chess_page.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  if (!kIsWeb) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
 
-  await MobileAds.instance.initialize();
+  if (!kIsWeb) {
+    await MobileAds.instance.initialize();
+  }
 
   runApp(const ChessApp());
 }
@@ -36,6 +44,7 @@ class _ChessAppState extends State<ChessApp> {
   @override
   void initState() {
     super.initState();
+    if (kIsWeb) return;
     _appOpenAdManager = AppOpenAdManager();
     _appStateSubscription = AppStateEventNotifier.appStateStream.listen((
       state,
@@ -52,6 +61,10 @@ class _ChessAppState extends State<ChessApp> {
 
   @override
   void dispose() {
+    if (kIsWeb) {
+      super.dispose();
+      return;
+    }
     _appStateSubscription?.cancel();
     AppStateEventNotifier.stopListening();
     super.dispose();
@@ -69,12 +82,14 @@ class _ChessAppState extends State<ChessApp> {
     ],
     supportedLocales: AppLocalizations.supportedLocales,
     theme: AppTheme.dark(),
-    home: UpgradeAlert(
-      barrierDismissible: false,
-      showIgnore: false,
-      showLater: false,
-      shouldPopScope: () => false,
-      child: const GameSetupScreen(),
-    ),
+    home: kIsWeb
+        ? const WebChessPage()
+        : UpgradeAlert(
+            barrierDismissible: false,
+            showIgnore: false,
+            showLater: false,
+            shouldPopScope: () => false,
+            child: const GameSetupScreen(),
+          ),
   );
 }

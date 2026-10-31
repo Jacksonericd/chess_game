@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -87,6 +88,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb) return const SizedBox.shrink();
     final screenWidth = MediaQuery.sizeOf(context).width;
     final width = (widget.maxWidth ?? screenWidth - 32)
         .clamp(1.0, screenWidth)

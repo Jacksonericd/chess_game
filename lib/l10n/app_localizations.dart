@@ -309,6 +309,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'STALEMATE — DRAW'**
   String get stalemate;
+
+  /// No description provided for @playSolo.
+  ///
+  /// In en, this message translates to:
+  /// **'PLAY SOLO'**
+  String get playSolo;
+
+  /// No description provided for @dashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get dashboard;
+
+  /// No description provided for @startPlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'Start playing'**
+  String get startPlaying;
+
+  /// No description provided for @play.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get play;
+
+  /// No description provided for @availableOnGooglePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'AVAILABLE ON GOOGLE PLAY'**
+  String get availableOnGooglePlay;
+
+  /// No description provided for @androidApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Android app'**
+  String get androidApp;
+
+  /// No description provided for @chessForAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Chess for Android'**
+  String get chessForAndroid;
+
+  /// No description provided for @getTheApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Get the app'**
+  String get getTheApp;
+
+  /// No description provided for @quietPlaceToPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'A QUIET PLACE TO PLAY'**
+  String get quietPlaceToPlay;
+
+  /// No description provided for @heroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Think ahead.\nMake your move.'**
+  String get heroTitle;
+
+  /// No description provided for @heroDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A focused chess game against a computer opponent, with five levels, a readable board, and no account required.'**
+  String get heroDescription;
+
+  /// No description provided for @playAMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Play a match'**
+  String get playAMatch;
+
+  /// No description provided for @levels.
+  ///
+  /// In en, this message translates to:
+  /// **'levels'**
+  String get levels;
+
+  /// No description provided for @boardViews.
+  ///
+  /// In en, this message translates to:
+  /// **'board views'**
+  String get boardViews;
+
+  /// No description provided for @signUps.
+  ///
+  /// In en, this message translates to:
+  /// **'sign-ups'**
+  String get signUps;
+
+  /// No description provided for @yourBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR BOARD'**
+  String get yourBoard;
+
+  /// No description provided for @simpleMatchFlow.
+  ///
+  /// In en, this message translates to:
+  /// **'A simple match flow'**
+  String get simpleMatchFlow;
+
+  /// No description provided for @chooseLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a level'**
+  String get chooseLevel;
+
+  /// No description provided for @chooseLevelDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the opponent that fits your mood.'**
+  String get chooseLevelDescription;
+
+  /// No description provided for @readBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the board'**
+  String get readBoard;
+
+  /// No description provided for @readBoardDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a piece to see its legal moves.'**
+  String get readBoardDescription;
+
+  /// No description provided for @playItThrough.
+  ///
+  /// In en, this message translates to:
+  /// **'Play it through'**
+  String get playItThrough;
+
+  /// No description provided for @playItThroughDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo or rotate whenever you need a new view.'**
+  String get playItThroughDescription;
+
+  /// No description provided for @takeBoardWithYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Take the board with you.'**
+  String get takeBoardWithYou;
+
+  /// No description provided for @androidAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'The Android app is available on Google Play for games away from the browser.'**
+  String get androidAvailability;
+
+  /// No description provided for @openGooglePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Google Play'**
+  String get openGooglePlay;
+
+  /// No description provided for @liveMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'LIVE MATCH'**
+  String get liveMatch;
+
+  /// No description provided for @leaveMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave match'**
+  String get leaveMatch;
+
+  /// No description provided for @setUpMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up a match'**
+  String get setUpMatch;
+
+  /// No description provided for @chooseComputerDifficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how hard the computer should play.'**
+  String get chooseComputerDifficulty;
+
+  /// No description provided for @openBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'Open board'**
+  String get openBoard;
+
+  /// No description provided for @playAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Play again'**
+  String get playAgain;
+
+  /// No description provided for @checkmateComputerWins.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkmate · Computer wins'**
+  String get checkmateComputerWins;
+
+  /// No description provided for @checkmateYouWin.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkmate · You win'**
+  String get checkmateYouWin;
+
+  /// No description provided for @stalemateDraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Stalemate · Draw'**
+  String get stalemateDraw;
+
+  /// No description provided for @yourMove.
+  ///
+  /// In en, this message translates to:
+  /// **'Your move'**
+  String get yourMove;
+
+  /// No description provided for @footerTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'CHESS · A focused single-player board'**
+  String get footerTagline;
 }
 
 class _AppLocalizationsDelegate
