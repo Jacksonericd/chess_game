@@ -7,7 +7,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class BannerAdWidget extends StatefulWidget {
   const BannerAdWidget({super.key, this.maxWidth});
 
-  static const adUnitId = 'ca-app-pub-1467587305582185/4462176450';
+  static const adUnitId = 'ca-app-pub-1467587305582185/7916936818';
   final double? maxWidth;
 
   @override
@@ -62,11 +62,12 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
             setState(() => _isLoaded = true);
           }
         },
-        onAdFailedToLoad: (failedAd, _) {
+        onAdFailedToLoad: (failedAd, error) {
           failedAd.dispose();
           if (mounted && generation == _loadGeneration) {
             _bannerAd = null;
             setState(() => _isLoaded = false);
+            debugPrint('Banner ad failed to load: $error');
             _scheduleRetry(width);
           }
         },
